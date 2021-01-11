@@ -22,16 +22,22 @@ pipeline {
                sh 'echo "All tests is done"'                       
             }
         }
-        stage('SonarScanner') {
-            environment {
-                SONAR = credentials('sonarqube-pixelistic')
-            }
+        stage('Build') {
             steps {
-                withSonarQubeEnv(installationName: 'Sonar') {
-                    sh 'docker run --rm -e SONAR_HOST_URL="http://10.26.0.126:9000/sonarqube" -e SONAR_LOGIN=$SONAR -v ${pwd}:/usr/src sonarsource/sonar-scanner-cli'
+                    sh 'docker build '
                 }
             }
         }
+        // stage('SonarScanner') {
+        //     environment {
+        //         SONAR = credentials('sonarqube-pixelistic')
+        //     }
+        //     steps {
+        //         withSonarQubeEnv(installationName: 'Sonar') {
+        //             sh 'docker run --rm -e SONAR_HOST_URL="http://10.26.0.126:9000/sonarqube" -e SONAR_LOGIN=$SONAR -v ${pwd}:/usr/src sonarsource/sonar-scanner-cli'
+        //         }
+        //     }
+        // }
         stage('Nexus Deploy') {
             steps {
                 sh 'docker push'

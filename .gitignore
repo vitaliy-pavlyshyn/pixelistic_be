@@ -1,8 +1,5 @@
 # dependencies
 node_modules/
-const/aws-config.json
 #production
 /build
-
 /package-lock.json
-
