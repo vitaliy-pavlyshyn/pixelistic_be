@@ -1,11 +1,13 @@
 version: 0.2
 
 phases:
+  install:
+    nodejs: latest
   pre_build:
     commands:
       - npm install
   build:
     commands:
-    sed -i "s|AWS_KEY_ID|$AWS_KEY_ID|g" ./const/aws-config.json
-    sed -i "s|AWS_SECRET_ACCESS_KEY|$AWS_SECRET_ACCESS_KEY|g" ./const/aws-config.json
-    sed -i "s|AWS_REGION|$AWS_REGION|g" ./const/aws-config.json
+      - sed -i "s|AWS_KEY_ID|$AWS_KEY_ID|g" ./const/aws-config.json
+      - sed -i "s|AWS_SECRET_ACCESS_KEY|$AWS_SECRET_ACCESS_KEY|g" ./const/aws-config.json 
+      - sed -i "s|AWS_REGION|$AWS_REGION|g" ./const/aws-config.json
