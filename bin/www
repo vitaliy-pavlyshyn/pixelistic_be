@@ -3,7 +3,7 @@ const { app } = require('../app');
 const server = require('../routes/sockets');
 const debug = require('debug')('nodetemplate:server');
 
-const port = normalizePort('80');
+const port = normalizePort(process.env.API_PORT);
 app.set('port', port);
 
 server.listen(port);
