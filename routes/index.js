@@ -7,7 +7,6 @@ const expressJwt = require("express-jwt");
 const authenticate = expressJwt({ secret: "server secret" });
 const HashForEmail = require("../models/hashForEmail");
 const { User, getUser } = require('../models/user');
-const { host, port } = require('../const/node-config');
 
 const prepareUser = ({_id, nickname, email, posts, isAdmin, avatar, disabled, fullName, website, bio, followings, followingsInfo, followers}) => {
   return {_id, nickname, email, isAdmin, posts, avatar, disabled, fullName, website, bio, followings, followingsInfo, followers};
@@ -45,7 +44,7 @@ const confirmEmail = user => {
       });
     }, 5 * 60 * 1000);
 
-    let link = `${host}:${port}/verify?hash=${newUser.hash}`;
+    let link = `${process.env.FE_URL}:${process.env.FE_PORT}/verify?hash=${newUser.hash}`;
     let mailOptions = {
       to: user.email,
       subject: "Please confirm your Email account",
@@ -131,7 +130,7 @@ router.post('/forgot', User.isEmailDB, (req, res, next) => {
     }
   });
  
-    let link = `${host}:${port}/change?reset=${resetPasswordToken}`;
+    let link = `${process.env.FE_URL}:${process.env.FE_PORT}/change?reset=${resetPasswordToken}`;
     let mailOptions = {
       to: req.body.email,
       subject: 'Reset password',
