@@ -27,8 +27,8 @@ pipeline {
         }
         stage('Push to registry') {
             steps {
-                sh 'docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest \ 
-                && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest'
+                sh "docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest \ 
+                && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest"
             }
         }
     }
