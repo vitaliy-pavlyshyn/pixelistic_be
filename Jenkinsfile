@@ -1,9 +1,9 @@
 pipeline {
+    agent any
     environment {
         env_vars_be = credentials("env_vars_be")
         aws_ecr_pass = credentials("aws_ecr_pass")
     }
-
     stages {
         stage('Clone repository') {
             steps {
@@ -30,6 +30,11 @@ pipeline {
                 sh 'docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest \ 
                 && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest'
             }
+        }
+    }
+    post { 
+        always { 
+            cleanWs()
         }
     }
 }
