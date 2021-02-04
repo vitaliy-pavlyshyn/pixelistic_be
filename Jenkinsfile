@@ -1,62 +1,34 @@
 pipeline {
-    tools {
-        nodejs 'node-default'
-    }  
-    agent {label 'slave-machine'}
-    
+    environment {
+    env_vars_be = credentials("env_vars_be")
+    aws_ecr_pass = credentials("aws_ecr_pass")
+    }
+
     stages {
         stage('Clone repository') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']],
-                doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], 
-                userRemoteConfigs: [[url: 'http://10.26.0.196/v_pavlyshyn/pixelistic_be.git']]])
+                git 'https://github.com/vitaliy-pavlyshyn/pixelistic_be.git'
             }
         }
-        stage('Startup') {
+        stage('Download .env file') {
             steps {
-               sh 'echo "Startup is done"' 
+              withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile-be') {
+                    sh "cp \$envfile-be ./.env"
+                }  
             }
         }
-        stage('Test') {
+        stage('Build a container') {
             steps {
-               sh 'echo "All tests is done"'                       
+                withCredentials([string(credentialsId: 'aws_ecr_pass', variable: 'PW')]) {
+                    sh 'docker login --username AWS --password \${PW} public.ecr.aws/t0q9r0m9 \
+                    && docker build -t pixelistic_be .'                       
             }
         }
-        stage('Build') {
+        stage('Push to registry') {
             steps {
-                    sh 'docker build '
+                    sh 'docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest \ 
+                    && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest'
                 }
             }
         }
-        // stage('SonarScanner') {
-        //     environment {
-        //         SONAR = credentials('sonarqube-pixelistic')
-        //     }
-        //     steps {
-        //         withSonarQubeEnv(installationName: 'Sonar') {
-        //             sh 'docker run --rm -e SONAR_HOST_URL="http://10.26.0.126:9000/sonarqube" -e SONAR_LOGIN=$SONAR -v ${pwd}:/usr/src sonarsource/sonar-scanner-cli'
-        //         }
-        //     }
-        // }
-        stage('Nexus Deploy') {
-            steps {
-                sh 'docker push'
-            }
-        }
-        // stage('Production') {
-        //     steps {
-        //         withCredentials([usernamePassword(credentialsId: 'pixel-prod', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        //             sh 'sshpass -p "$PASSWORD" scp -oStrictHostKeyChecking=no ./production.yml $USERNAME@10.26.3.158:/'
-        //         }
-        //     }
-        // }
     }
-    post {
-      failure {
-        updateGitlabCommitStatus name: 'build', state: 'failed'
-      }
-      success {
-        updateGitlabCommitStatus name: 'build', state: 'success'
-      }
-    }
-}

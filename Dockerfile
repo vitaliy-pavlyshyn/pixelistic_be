@@ -11,4 +11,4 @@ WORKDIR /app
 COPY --from=build_image /app .
 EXPOSE 3000
 CMD ["node", "./bin/www"]
-# CMD tail -f /dev/mull
+# CMD tail -f /dev/null
