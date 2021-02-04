@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Download .env file') {
             steps {
-              withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile-be') {
+                withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile-be') {
                     sh "cp \$envfile-be ./.env"
                 }
             }
@@ -22,13 +22,14 @@ pipeline {
                 withCredentials([string(credentialsId: 'aws_ecr_pass', variable: 'PW')]) {
                     sh 'docker login --username AWS --password \${PW} public.ecr.aws/t0q9r0m9 \
                     && docker build -t pixelistic_be .'                       
+                }
             }
         }
         stage('Push to registry') {
             steps {
-                    sh 'docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest \ 
-                    && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest'
-                }
+                sh 'docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest \ 
+                && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest'
             }
         }
     }
+}
