@@ -13,15 +13,15 @@ pipeline {
         stage('Download .env file') {
             steps {
                 withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile-be') {
-                    sh "cp \$envfile-be ./.env"
+                    sh "cp $envfile-be ./.env"
                 }
             }
         }
         stage('Build a container') {
             steps {
                 withCredentials([string(credentialsId: 'aws_ecr_pass', variable: 'PW')]) {
-                    sh 'docker login --username AWS --password \${PW} public.ecr.aws/t0q9r0m9 \
-                    && docker build -t pixelistic_be .'                       
+                    sh "docker login --username AWS --password $PW public.ecr.aws/t0q9r0m9 \
+                    && docker build -t pixelistic_be ."
                 }
             }
         }
