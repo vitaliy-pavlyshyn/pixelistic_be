@@ -12,8 +12,8 @@ pipeline {
         }
         stage('Download .env file') {
             steps {
-                withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile-be') {
-                    sh "cp $envfile-be ./.env"
+                withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile')]) {
+                    sh "cp $envfile .env"
                 }
             }
         }
