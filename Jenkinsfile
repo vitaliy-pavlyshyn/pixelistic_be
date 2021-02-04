@@ -20,14 +20,14 @@ pipeline {
         stage('Build a container') {
             steps {
                 withCredentials([string(credentialsId: 'aws_ecr_pass', variable: 'PW')]) {
-                    sh "docker login --username AWS --password $PW public.ecr.aws/t0q9r0m9 \
-                    && docker build -t pixelistic_be ."
+                    sh "sudo docker login --username AWS --password $PW public.ecr.aws/t0q9r0m9 \
+                    && sudo docker build -t pixelistic_be ."
                 }
             }
         }
         stage('Push to registry') {
             steps {
-                sh "docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest && docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest"
+                sh "sudo docker tag pixelistic_be:latest public.ecr.aws/t0q9r0m9/pixelistic_be:latest && sudo docker push public.ecr.aws/t0q9r0m9/pixelistic_be:latest"
             }
         }
     }
