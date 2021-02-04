@@ -14,7 +14,7 @@ pipeline {
             steps {
               withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile-be') {
                     sh "cp \$envfile-be ./.env"
-                }  
+                }
             }
         }
         stage('Build a container') {
