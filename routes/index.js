@@ -44,7 +44,7 @@ const confirmEmail = user => {
       });
     }, 5 * 60 * 1000);
 
-    let link = `${process.env.FE_URL}:${process.env.FE_PORT}/verify?hash=${newUser.hash}`;
+    let link = `${process.env.FE_URL}/verify?hash=${newUser.hash}`;
     let mailOptions = {
       to: user.email,
       subject: "Please confirm your Email account",
@@ -130,7 +130,7 @@ router.post('/forgot', User.isEmailDB, (req, res, next) => {
     }
   });
  
-    let link = `${process.env.FE_URL}:${process.env.FE_PORT}/change?reset=${resetPasswordToken}`;
+    let link = `${process.env.FE_URL}/change?reset=${resetPasswordToken}`;
     let mailOptions = {
       to: req.body.email,
       subject: 'Reset password',

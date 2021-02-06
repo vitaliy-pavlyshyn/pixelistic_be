@@ -10,13 +10,6 @@ pipeline {
                 git 'https://github.com/vitaliy-pavlyshyn/pixelistic_be.git'
             }
         }
-        stage('Download .env file') {
-            steps {
-                withCredentials([file(credentialsId: 'env_vars_be', variable: 'envfile')]) {
-                    sh "cp $envfile .env"
-                }
-            }
-        }
         stage('Build a container') {
             steps {
                 withCredentials([string(credentialsId: 'aws_ecr_pass', variable: 'PW')]) {
