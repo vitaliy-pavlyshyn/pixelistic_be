@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        env_vars_be = credentials("env_vars_be")
         aws_ecr_pass = credentials("aws_ecr_pass")
     }
     stages {
